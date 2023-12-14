@@ -13,6 +13,8 @@
     2. Problema dei livelli di difficoltà - risolto
 
     3. Devo risolvere il problema della classe bomba - risolto
+
+    4. Devo sospendere il gioco se gli capita quella rossa
 */
 
 // Seleziono il mio bottone
@@ -21,8 +23,8 @@ const myButton = document.querySelector('button');
 // Mi seleziono la select
 const mySelect = document.querySelector('select');
 
-// Variabile di gameover
-let gameOver = false;
+// Flag
+const myFlag = false;
 
 
 /*************************************************************/
@@ -53,7 +55,6 @@ myButton.addEventListener('click', function () {
         // Finchè è vero che in array ce quel numero, tu ridammi un numero random, e ricontrolla
         while ((bomb.includes(number)) == true) {
             number = randomN(1, lvlDiff);
-            console.log(number);
             bomb.includes(number);
         } // ... finchè non esaurisco tutti i true
 
@@ -79,26 +80,23 @@ myButton.addEventListener('click', function () {
         // Metto le celle nel mio container
         myContainer.append(myCell);
 
+        // Contatore
+        let nClick = 0;
+
+        // Evento click del container per vedere quante volte si faceva click
+        myContainer.addEventListener('click', function () {
+            nClick += 1;
+        });
+
         // Aggiungo la funzione del click a myCell
         myCell.addEventListener('click', function () {
 
-            // Messaggio in console
-            console.log('Numero della cella selezionato - ' + i);
-
-            if (!gameOver) {
-                // Se bomb ha dentro i allora hai perso
-                if (bomb.includes(i)) {
-                    this.classList.add('bomb');
-                    alert('Hai perso');
-                } else {
-                    this.classList.add('active');
-                }
-            }
-            else {
-                myContainer.innerHTML = ` 
-                    <h1>Game over</h1>
-                `;
-                alert('Fine partita-Hai vinto')
+            // Se bomb ha dentro i hai perso
+            if (bomb.includes(i)) {
+                this.classList.add('bomb');
+                alert(`Hai Perso, hai cliccato ${nClick} volte`);
+            } else {
+                this.classList.add('active');
             }
         });
     }
