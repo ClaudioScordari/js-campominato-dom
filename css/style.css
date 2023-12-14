@@ -15,7 +15,12 @@ button {
     line-height: 50px;
 }
 
-.my-container .active {
+.active {
     background-color: black;
+    color: white;
+}
+
+.bomb {
+    background-color: red;
     color: white;
 }

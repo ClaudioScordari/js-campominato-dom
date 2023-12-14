@@ -8,7 +8,11 @@
     Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l'utente ha cliccato su una cella che non era una bomba.
     ----------------------------------------------------------------------------------------
 
-    1. Devo crermi un array di 16 numeri tutti diversi
+    1. Devo crermi un array di 16 numeri tutti diversi - risolto
+
+    2. Problema dei livelli di difficoltà - risolto
+
+    3. Devo risolvere il problema della classe bomba - risolto
 */
 
 // Seleziono il mio bottone
@@ -17,32 +21,12 @@ const myButton = document.querySelector('button');
 // Mi seleziono la select
 const mySelect = document.querySelector('select');
 
-// Array di 16 numeri tutti diversi (array inizialmente vuoto)
-const bomb = [];
+// Variabile di gameover
+let gameOver = false;
 
-// Ciclo per mettermi all'interno dell'array i numeri-bomba
-for (let index = 0; index < 16; index++) {
 
-    // All'interno di number avrò 16 numeri
-    number = randomN(1, 16);
-    console.log('Generato N random ' + number);
+/*************************************************************/
 
-    // Finchè è vero che in array ce quel numero, tu ridammi un numero random, e ricontrolla
-    while ((bomb.includes(number)) == true) {
-        number = randomN(1, 16);
-        console.log(number);
-        bomb.includes(number);
-    } // ... finchè non esaurisco tutti i true
-
-    // Pushami number in array
-    bomb.push(number);
-}
-
-// Stampami bomb in console
-console.log(bomb);
-
-// Mi seleziono i lvl di difficoltà
-const optionDifficoltà = document.querySelectorAll('option');
 
 // Aggiungo il click del bottone
 myButton.addEventListener('click', function () {
@@ -53,20 +37,44 @@ myButton.addEventListener('click', function () {
     myContainer.classList.remove('d-none');
     myContainer.classList.add('d-flex');
 
-    // Mi seleziono il vaore della select
+    // Mi seleziono il valore della select
     const lvlDiff = parseInt(mySelect.value);
+
+    // Array di 16 numeri tutti diversi (array inizialmente vuoto)
+    const bomb = [];
+
+    // Ciclo per mettermi all'interno dell'array i numeri-bomba
+    for (let index = 0; index < 16; index++) {
+
+        // All'interno di number avrò 16 numeri
+        number = randomN(1, lvlDiff);
+        console.log('Generato N random ' + number);
+
+        // Finchè è vero che in array ce quel numero, tu ridammi un numero random, e ricontrolla
+        while ((bomb.includes(number)) == true) {
+            number = randomN(1, lvlDiff);
+            console.log(number);
+            bomb.includes(number);
+        } // ... finchè non esaurisco tutti i true
+
+        // Pushami number in array
+        bomb.push(number);
+    }
+
+    // Stampami bomb in console
+    console.log(bomb);
 
     // Cancello la griglia vecchia
     myContainer.innerHTML = '';
 
-    //Creo un ciclo per crearmi 100 div-celle
-    for (let index = 1; index <= lvlDiff; index++) {
+    //Creo un ciclo per crearmi x div-celle
+    for (let i = 1; i <= lvlDiff; i++) {
 
         // Devo creare i div celle
         const myCell = document.createElement('div');
 
         // Metto i numeri nelle celle
-        myCell.innerHTML = index;
+        myCell.innerHTML = i;
 
         // Metto le celle nel mio container
         myContainer.append(myCell);
@@ -75,15 +83,30 @@ myButton.addEventListener('click', function () {
         myCell.addEventListener('click', function () {
 
             // Messaggio in console
-            console.log('ciao');
+            console.log('Numero della cella selezionato - ' + i);
 
-            // Add classe a myCell
-            this.classList.toggle('active');
+            if (!gameOver) {
+                // Se bomb ha dentro i allora hai perso
+                if (bomb.includes(i)) {
+                    this.classList.add('bomb');
+                    alert('Hai perso');
+                } else {
+                    this.classList.add('active');
+                }
+            }
+            else {
+                myContainer.innerHTML = ` 
+                    <h1>Game over</h1>
+                `;
+                alert('Fine partita-Hai vinto')
+            }
         });
     }
 });
 
+
 /***************************************************************/
+
 
 /* FUNZIONI */
 
