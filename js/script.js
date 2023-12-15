@@ -14,7 +14,7 @@
 
     3. Devo risolvere il problema della classe bomba - risolto
 
-    4. Devo sospendere il gioco se gli capita quella rossa
+    4. Devo sospendere il gioco se gli capita quella rossa - risolto
 */
 
 // Seleziono il mio bottone
@@ -23,8 +23,8 @@ const myButton = document.querySelector('button');
 // Mi seleziono la select
 const mySelect = document.querySelector('select');
 
-// Flag
-const myFlag = false;
+// Counter
+let counter = 0;
 
 
 /*************************************************************/
@@ -45,21 +45,14 @@ myButton.addEventListener('click', function () {
     // Array di 16 numeri tutti diversi (array inizialmente vuoto)
     const bomb = [];
 
-    // Ciclo per mettermi all'interno dell'array i numeri-bomba
-    for (let index = 0; index < 16; index++) {
-
-        // All'interno di number avrò 16 numeri
+    // Finchè l'array è minore di 16, generami un numero random
+    while (bomb.length < 16) {
         number = randomN(1, lvlDiff);
-        console.log('Generato N random ' + number);
 
-        // Finchè è vero che in array ce quel numero, tu ridammi un numero random, e ricontrolla
-        while ((bomb.includes(number)) == true) {
-            number = randomN(1, lvlDiff);
-            bomb.includes(number);
-        } // ... finchè non esaurisco tutti i true
-
-        // Pushami number in array
-        bomb.push(number);
+        // Se nell'array ce lo stesso numero non pusharlo
+        if (!bomb.includes(number)) {
+            bomb.push(number);
+        }
     }
 
     // Stampami bomb in console
@@ -80,23 +73,43 @@ myButton.addEventListener('click', function () {
         // Metto le celle nel mio container
         myContainer.append(myCell);
 
-        // Contatore
-        let nClick = 0;
-
-        // Evento click del container per vedere quante volte si faceva click
-        myContainer.addEventListener('click', function () {
-            nClick += 1;
-        });
-
         // Aggiungo la funzione del click a myCell
         myCell.addEventListener('click', function () {
 
-            // Se bomb ha dentro i hai perso
-            if (bomb.includes(i)) {
-                this.classList.add('bomb');
-                alert(`Hai Perso, hai cliccato ${nClick} volte`);
-            } else {
-                this.classList.add('active');
+            // Mi seleziono tutte le bombe (celle con classe bomb)
+            const allBombs = document.querySelectorAll('.bomb');
+
+            // Mi seleziono tutte le celle "normali"
+            const allActives = document.querySelectorAll('.active');
+
+            /* 
+                Io posso continuare a giocare SE:
+                1. Se la lunghezza di tutte le bombe è uguale a 0;
+                2. Se la lunghezza di tutte le celle "normali" è minore di (celle generate - 16).
+            */
+            if ((allBombs.length == 0) && (allActives.length < (lvlDiff - 16))) {
+
+                // Se bomb ha dentro i hai perso
+                if (!bomb.includes(i)) {
+
+                    // Aggiungo la classe active e counter++ SOLO SE quella cella non ha quella classe
+                    if (!this.classList.contains('active')) {
+                        this.classList.add('active');
+                        counter++;
+
+                        /*
+                            Se la lunghezza totale delle celle normali diventa uguale alla differenza
+                            tra le celle generate meno 16, allora hai vinto
+                        */
+                        if (allActives.length == (lvlDiff - 16)) {
+                            alert('Hai vinto! Questo è il tuo punteggio: ' + counter);
+                        }
+                    }
+                }
+                else {
+                    this.classList.add('bomb');
+                    alert('Hai perso, hai totalizzato ' + counter + ' punti!');
+                }
             }
         });
     }
