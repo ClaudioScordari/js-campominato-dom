@@ -23,9 +23,6 @@ const myButton = document.querySelector('button');
 // Mi seleziono la select
 const mySelect = document.querySelector('select');
 
-// Counter
-let counter = 0;
-
 
 /*************************************************************/
 
@@ -76,6 +73,7 @@ myButton.addEventListener('click', function () {
         // Aggiungo la funzione del click a myCell
         myCell.addEventListener('click', function () {
 
+
             // Mi seleziono tutte le bombe (celle con classe bomb)
             const allBombs = document.querySelectorAll('.bomb');
 
@@ -92,23 +90,23 @@ myButton.addEventListener('click', function () {
                 // Se bomb ha dentro i hai perso
                 if (!bomb.includes(i)) {
 
-                    // Aggiungo la classe active e counter++ SOLO SE quella cella non ha quella classe
+                    // Aggiungo la classe active e aggiungo di uno il "counter" SOLO SE quella cella non ha quella classe
                     if (!this.classList.contains('active')) {
                         this.classList.add('active');
-                        counter++;
+                        allActives.length++;
 
                         /*
                             Se la lunghezza totale delle celle normali diventa uguale alla differenza
                             tra le celle generate meno 16, allora hai vinto
                         */
                         if (allActives.length == (lvlDiff - 16)) {
-                            alert('Hai vinto! Questo è il tuo punteggio: ' + counter);
+                            alert('Hai vinto! Questo è il tuo punteggio: ' + allActives.length);
                         }
                     }
                 }
                 else {
                     this.classList.add('bomb');
-                    alert('Hai perso, hai totalizzato ' + counter + ' punti!');
+                    alert('Hai perso, hai totalizzato ' + allActives.length + ' punti!');
                 }
             }
         });
